@@ -51,10 +51,7 @@ const Demande = () => {
     event.preventDefault();
     try {
       await Axios.delete("http://localhost:8010/api/v1/demandes/" + id);
-      const getcommande = await Axios.get(
-        "http://localhost:8010/api/v1/demandes"
-      );
-      setCommande(getcommande.data._embedded.demandes);
+      getcommande()
     } catch (err) {
       console.log(err);
     }
