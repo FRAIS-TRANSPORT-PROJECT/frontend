@@ -1,17 +1,41 @@
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ForceLightMode from './lightModeFix';
+import DemandeAddPage from './Pages/DemandeAddPage';
+import DemandeListPage from './Pages/DemandeListPage';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <div>Hello world!</div>
+  },
+  {
+    path: '/demandes/add',
+    element: <DemandeAddPage />
+  },
+  {
+    path: '/demandes',
+    element: <DemandeListPage />
+  }
+]);
+
+const config = {
+  useSystemColorMode: false,
+  initialColorMode: 'light'
+};
+
+const lightTheme = extendTheme({ config });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
-    <App />
+    <ChakraProvider theme={lightTheme}>
+      <ForceLightMode>
+        <RouterProvider router={router} />
+      </ForceLightMode>
+    </ChakraProvider>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
