@@ -84,6 +84,7 @@ const DemandeForm = () => {
             <Input
               id="motif"
               type="text"
+              required
             />
           </FormControl>
           <FormControl>
@@ -94,10 +95,12 @@ const DemandeForm = () => {
                 color="gray.300"
                 fontSize="1em"
                 children="$"
+                required
               />
               <Input
                 id="frais"
                 placeholder="Enter amount"
+                required
               />
             </InputGroup>
           </FormControl>
@@ -107,6 +110,7 @@ const DemandeForm = () => {
               inputId="transport"
               options={transports}
               onChange={(v) => setTransport(v.value)}
+              required
             />
           </FormControl>
           <FormControl>
@@ -115,6 +119,7 @@ const DemandeForm = () => {
               inputId="ville-dep"
               options={cities}
               onChange={(v) => setVilleDep(v.value)}
+              required
             />
           </FormControl>
           <FormControl>
@@ -123,6 +128,7 @@ const DemandeForm = () => {
               inputId="ville-ar"
               options={cities}
               onChange={(v) => setVilleAr(v.value)}
+              required
             />
           </FormControl>
           <FormControl>
@@ -130,6 +136,7 @@ const DemandeForm = () => {
             <Input
               id="date-dep"
               type="date"
+              required
             />
           </FormControl>
           <FormControl>
@@ -137,6 +144,7 @@ const DemandeForm = () => {
             <Input
               id="date-ar"
               type="date"
+              required
             />
           </FormControl>
           <FormControl>
@@ -149,6 +157,7 @@ const DemandeForm = () => {
               inputId="etats"
               options={etats}
               onChange={(v) => setEtat(v.value)}
+              required
             />
           </FormControl>
           <Stack spacing={10}>

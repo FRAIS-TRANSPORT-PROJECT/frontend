@@ -5,11 +5,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ForceLightMode from './lightModeFix';
 import DemandeAddPage from './Pages/DemandeAddPage';
 import DemandeListPage from './Pages/DemandeListPage';
+import HomePage from './Pages/HomePage';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <div>Hello world!</div>
+    element: <HomePage />
   },
   {
     path: '/demandes/add',
