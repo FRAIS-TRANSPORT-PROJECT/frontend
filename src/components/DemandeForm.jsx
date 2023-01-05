@@ -14,8 +14,10 @@ import axios from 'axios';
 import { Select } from 'chakra-react-select';
 import { State } from 'country-state-city';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const DemandeForm = () => {
+  const navigate = useNavigate();
   const [transport, setTransport] = useState('');
   const [villeDep, setVilleDep] = useState('');
   const [villeAr, setVilleAr] = useState('');
@@ -63,10 +65,13 @@ const DemandeForm = () => {
     axios
       .post('http://localhost:8086/api/v1/demandes', data, {
         headers: {
-          'Content-Type': 'application/json'
+          'content-type': 'application/json'
         }
       })
-      .then((d) => console.log(d));
+      .then((d) => {
+        // console.log(d.data['id']);
+        navigate('/demandes/' + d.data['id'] + '/documents/add');
+      });
   };
 
   return (
@@ -169,7 +174,7 @@ const DemandeForm = () => {
                 bg: 'blue.500'
               }}
             >
-              Sign in
+              Demander
             </Button>
           </Stack>
         </Stack>

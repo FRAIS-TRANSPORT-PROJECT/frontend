@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ForceLightMode from './lightModeFix';
 import DemandeAddPage from './Pages/DemandeAddPage';
 import DemandeListPage from './Pages/DemandeListPage';
+import DocumentsAddPage from './Pages/DocumentsAddPage';
 import HomePage from './Pages/HomePage';
 
 const router = createBrowserRouter([
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/demandes',
     element: <DemandeListPage />
+  },
+  {
+    path: '/demandes/:id/documents/add',
+    element: <DocumentsAddPage />
   }
 ]);
 
