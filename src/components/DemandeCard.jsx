@@ -1,36 +1,37 @@
+import { DeleteIcon, EditIcon, InfoIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
+  Button,
+  Flex,
   Heading,
   HStack,
   Link,
+  Spacer,
   Tag,
   Text,
   useColorModeValue
 } from '@chakra-ui/react';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
+import BlogTags from './BlogTags';
 
-const BlogTags = (props) => {
-  return (
-    <HStack
-      spacing={2}
-      marginTop={props.marginTop}
-    >
-      {props.tags.map((tag) => {
-        return (
-          <Tag
-            size={'md'}
-            variant="solid"
-            colorScheme="orange"
-            key={tag}
-          >
-            {tag}
-          </Tag>
-        );
-      })}
-    </HStack>
-  );
-};
+const DemandeCard = ({ data, setDemandes }) => {
+  const navigate = useNavigate();
+  const deleteDemande = () => {
+    axios
+      .delete('http://localhost:8086/api/v1/demandes/' + data.id)
+      .then(() => {
+        console.log('deleted!');
+        getDemandes();
+      });
+  };
 
-const DemandeCard = ({ data }) => {
+  const getDemandes = () => {
+    axios.get('http://localhost:8086/api/v1/demandes').then((d) => {
+      console.log(d.data['_embedded'].demandes);
+      setDemandes(d.data['_embedded'].demandes);
+    });
+  };
   return (
     <Box
       margin={{ base: '1', sm: '5' }}
@@ -81,6 +82,32 @@ const DemandeCard = ({ data }) => {
             <Text>Moyen transport- {data.moyenTransport}</Text>
           </div>
         </HStack>
+        <Flex
+          gap={3}
+          margin={3}
+          alignItems="flex-end"
+          dir="row"
+        >
+          <Spacer />
+          <Button
+            colorScheme={'blue'}
+            onClick={() => navigate('/demandes/' + data.id + '/update')}
+          >
+            <EditIcon />
+          </Button>
+          <Button
+            colorScheme={'red'}
+            onClick={() => deleteDemande()}
+          >
+            <DeleteIcon />
+          </Button>
+          <Button
+            colorScheme={'green'}
+            onClick={() => navigate('/demandes/' + data.id)}
+          >
+            <InfoIcon />
+          </Button>
+        </Flex>
       </Box>
     </Box>
   );

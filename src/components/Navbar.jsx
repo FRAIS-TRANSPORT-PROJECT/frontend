@@ -86,7 +86,7 @@ export default function Navbar() {
                 Demandes
               </NavLink>
               <NavLink
-                key={2}
+                key={3}
                 to="/demandes/add"
               >
                 Ajouter demandes

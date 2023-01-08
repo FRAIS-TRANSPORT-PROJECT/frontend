@@ -8,22 +8,24 @@ import {
   InputLeftElement,
   Stack,
   Textarea,
-  useColorModeValue
+  useColorModeValue,
+  useSafeLayoutEffect
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { Select } from 'chakra-react-select';
 import { State } from 'country-state-city';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ETATS } from '../tools/Constants';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const DemandeForm = () => {
+const DemandeUpdateForm = () => {
   const navigate = useNavigate();
   const [transport, setTransport] = useState('');
   const [villeDep, setVilleDep] = useState('');
   const [villeAr, setVilleAr] = useState('');
   const [etat, setEtat] = useState('');
+  const [demande, setDemande] = useState({});
 
+  const { id } = useParams();
   let cities = State.getStatesOfCountry('MA').map((city) => {
     return {
       value: city.name,
@@ -38,14 +40,25 @@ const DemandeForm = () => {
     };
   });
 
-  const etats = ETATS.map((t) => {
+  const etats = ['EN_COURS', 'VALIDE', 'REFUSE', 'EN_ATTENTE'].map((t) => {
     return {
       value: t,
       label: t
     };
   });
 
-  const addDemande = (event) => {
+  useEffect(() => {
+    axios.get('http://localhost:8086/api/v1/demandes/' + id).then((d) => {
+      console.log(d.data);
+      setDemande(d.data);
+      setTransport(d.data.moyenTransport);
+      setVilleAr(d.data.villeArrive);
+      setVilleDep(d.data.villeDepart);
+      setEtat(d.data.etat);
+    });
+  }, []);
+
+  const updateDemande = (event) => {
     event.preventDefault();
     const elements = event.currentTarget.elements;
 
@@ -64,14 +77,15 @@ const DemandeForm = () => {
     console.log(data);
 
     axios
-      .post('http://localhost:8086/api/v1/demandes', data, {
+      .put('http://localhost:8086/api/v1/demandes/' + id, data, {
         headers: {
           'content-type': 'application/json'
         }
       })
       .then((d) => {
         // console.log(d.data['id']);
-        navigate('/demandes/' + d.data['id'] + '/documents/add');
+        // navigate('/demandes/' + d.data['id'] + '/documents/add');
+        navigate('/demandes/');
       });
   };
 
@@ -83,13 +97,15 @@ const DemandeForm = () => {
       boxShadow={'lg'}
       p={8}
     >
-      <form onSubmit={addDemande}>
+      <form onSubmit={updateDemande}>
         <Stack spacing={4}>
           <FormControl>
             <FormLabel>Motif:</FormLabel>
             <Input
               id="motif"
               type="text"
+              //   value={demande.motif || ''}
+              defaultValue={demande.motif}
               required
             />
           </FormControl>
@@ -106,6 +122,7 @@ const DemandeForm = () => {
               <Input
                 id="frais"
                 placeholder="Enter amount"
+                defaultValue={demande.frais}
                 required
               />
             </InputGroup>
@@ -115,6 +132,10 @@ const DemandeForm = () => {
             <Select
               inputId="transport"
               options={transports}
+              value={{
+                label: transport,
+                value: transport
+              }}
               onChange={(v) => setTransport(v.value)}
               required
             />
@@ -124,6 +145,10 @@ const DemandeForm = () => {
             <Select
               inputId="ville-dep"
               options={cities}
+              value={{
+                label: villeDep,
+                value: villeDep
+              }}
               onChange={(v) => setVilleDep(v.value)}
               required
             />
@@ -133,6 +158,10 @@ const DemandeForm = () => {
             <Select
               inputId="ville-ar"
               options={cities}
+              value={{
+                label: villeAr,
+                value: villeAr
+              }}
               onChange={(v) => setVilleAr(v.value)}
               required
             />
@@ -142,6 +171,9 @@ const DemandeForm = () => {
             <Input
               id="date-dep"
               type="date"
+              value={
+                new Date(demande.dateDebut).toLocaleDateString('en-CA') || ''
+              }
               required
             />
           </FormControl>
@@ -150,18 +182,28 @@ const DemandeForm = () => {
             <Input
               id="date-ar"
               type="date"
+              value={
+                new Date(demande.dateFin).toLocaleDateString('en-CA') || ''
+              }
               required
             />
           </FormControl>
           <FormControl>
             <FormLabel>Description: </FormLabel>
-            <Textarea id="description" />
+            <Textarea
+              id="description"
+              defaultValue={demande.description}
+            />
           </FormControl>
           <FormControl>
             <FormLabel>Etats: </FormLabel>
             <Select
               inputId="etats"
               options={etats}
+              value={{
+                label: etat,
+                value: etat
+              }}
               onChange={(v) => setEtat(v.value)}
               required
             />
@@ -175,7 +217,7 @@ const DemandeForm = () => {
                 bg: 'blue.500'
               }}
             >
-              Demander
+              Modifier demande
             </Button>
           </Stack>
         </Stack>
@@ -184,4 +226,4 @@ const DemandeForm = () => {
   );
 };
 
-export default DemandeForm;
+export default DemandeUpdateForm;

@@ -43,7 +43,10 @@ const DemandeListPage = () => {
           {demandes.map((demande) => {
             return (
               <>
-                <DemandeCard data={demande} />
+                <DemandeCard
+                  data={demande}
+                  setDemandes={setDemandes}
+                />
                 <hr />
               </>
             );
